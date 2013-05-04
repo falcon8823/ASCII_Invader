@@ -18,8 +18,7 @@ typedef struct
 {
     int x;
     int y;
-    int endure;//耐久
-    int life;//HP
+		int active;
     int type;//種類
 } ENEMY;
 

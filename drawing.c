@@ -10,8 +10,18 @@
 #include "invader.h"
 #include "drawing.h"
 
-#define ENEMY_X(i) (ENEMY_FIELD_X + i * (ENEMY_WIDTH + SPACE_X))
-#define ENEMY_Y(j) (ENEMY_FIELD_Y + j * (ENEMY_HEIGHT + SPACE_Y))
+
+static char* character[] = {
+	"\\(^p^)/",
+	"\\(=3=)/",
+	"\\(o\"o)/",
+	"\\(OwO)/",
+	"\\(-A-)/",
+	"\\(@*@)/",
+	"\\('=')/",
+	"\\(DuD)/",
+	"\\(pep)/"
+};
 
 void draw_player(PLAYER *player, WINDOW *win)
 { 
@@ -39,17 +49,6 @@ void draw_wall(WALL *wall, WINDOW *win)
 
 void draw_enemy(ENEMY *enemy, WINDOW *win)
 {
-		char* character[] = {
-			"\\(^p^)/",
-			"\\(=3=)/",
-			"\\(o\"o)/",
-			"\\(OwO)/",
-			"\\(-A-)/",
-			"\\(@*@)/",
-			"\\('=')/",
-			"\\(DuD)/",
-			"\\(pep)/"
-		};
 
 		wmove(win, ENEMY_Y(enemy->y), ENEMY_X(enemy->x));
 		wprintw(win, character[enemy->type]);
