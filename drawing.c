@@ -11,16 +11,29 @@
 #include "drawing.h"
 
 
-static char* character[] = {
-	"\\(^p^)/",
-	"\\(=3=)/",
-	"\\(o\"o)/",
-	"\\(OwO)/",
-	"\\(-A-)/",
-	"\\(@*@)/",
-	"\\('=')/",
-	"\\(DuD)/",
-	"\\(pep)/"
+static char* character[2][9] = {
+	{
+		"\\(^p^)/",
+		"\\(=3=)/",
+		"\\(o\"o)/",
+		"\\(OwO)/",
+		"\\(-A-)/",
+		"\\(@*@)/",
+		"\\('=')/",
+		"\\(DuD)/",
+		"\\(pep)/"
+	},
+	{
+		"/(-p-)\\",
+		"/(=3=)\\",
+		"/(o\"o)\\",
+		"/(OwO)\\",
+		"/(-A-)\\",
+		"/(@*@)\\",
+		"/('=')\\",
+		"/(DuD)\\",
+		"/(pep)\\"
+	}
 };
 
 void draw_player(PLAYER *player, WINDOW *win)
@@ -51,7 +64,7 @@ void draw_enemy(ENEMY *enemy, int fx, int fy, WINDOW *win)
 {
 
 		wmove(win, ENEMY_Y_POS(enemy->y, fy), ENEMY_X_POS(enemy->x, fx));
-		wprintw(win, character[enemy->type]);
+		wprintw(win, character[fx % 2][enemy->type]);
 }
 
 void draw_bullet(BULLET *bullet,WINDOW *win)

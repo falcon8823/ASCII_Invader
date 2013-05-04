@@ -29,6 +29,9 @@
 #define ENEMY_X_MAX 7
 #define ENEMY_Y_MAX 7
 #define ENEMY_NUM (ENEMY_X_MAX * ENEMY_Y_MAX)
+#define ENEMY_MOVE_RATE 10
+#define D_LEFT -1
+#define D_RIGHT 1
 
 #define FPS (clock_t)(CLOCKS_PER_SEC / 60)
 
@@ -53,6 +56,8 @@ static WALL wall[4];
 static ENEMY enemy[ENEMY_X_MAX * ENEMY_Y_MAX];
 static int enemy_field_x, enemy_field_y;
 static BULLET player_bul[BUL_MAX];
+static int enemy_vel;
+static int enemy_move_count;
 
 // ゲーム初期化関数
 void game_init() {
@@ -84,6 +89,8 @@ void game_init() {
 	}
 	enemy_field_x = ENEMY_FIELD_X;
 	enemy_field_y = ENEMY_FIELD_Y;
+	enemy_vel = D_LEFT;
+	enemy_move_count = 0;
 	
 	// 画面作成
 	setlocale(LC_ALL,"");
@@ -140,7 +147,13 @@ static void update() {
 	}
 
 	enemy_collision();
-
+	
+	if(enemy_move_count >= ENEMY_MOVE_RATE) {
+		enemy_field_x += enemy_vel;
+		if(enemy_field_x <= 5 || enemy_field_x + (ENEMY_WIDTH + SPACE_X) * ENEMY_X_MAX >= WIN_WIDTH) enemy_vel *= -1;
+		enemy_move_count = 0;
+	}
+	enemy_move_count++;
 }
 
 // 描画の更新処理関数
