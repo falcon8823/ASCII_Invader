@@ -11,6 +11,7 @@
 #include <locale.h>
 #include <sys/time.h>
 #include <unistd.h>
+#include <time.h>
 #include "invader.h"
 #include "drawing.h"
 
@@ -24,9 +25,11 @@
 
 #define K_QUIT 'q'
 
-#define BUL_MAX 10
+#define BUL_MAX 100
 #define ENEMY_X_MAX 7
 #define ENEMY_Y_MAX 7
+
+#define FPS (clock_t)(CLOCKS_PER_SEC / 20)
 
 static void update();
 static void draw();
@@ -40,6 +43,8 @@ static fd_set mask; // ファイルディスクリプタのマスク
 
 static WINDOW *win; // cursesのWINDOW
 static struct timeval t_out;
+
+static clock_t cur_t, pre_t;
 
 static PLAYER player;
 static WALL wall[4];
@@ -55,7 +60,7 @@ void game_init() {
 	FD_ZERO(&mask);
 	FD_SET(0, &mask); // 標準入力の監視	
 	t_out.tv_sec = 0;
-	t_out.tv_usec = 10;
+	t_out.tv_usec = 1;
 		
 	// init bullet
 	for(i = 0; i < BUL_MAX; i++) {
@@ -96,6 +101,7 @@ void game_loop() {
 	while(1) {
 		readOk = mask;
 		select(width, (fd_set*)&readOk, NULL, NULL, &t_out);		
+		cur_t = clock();
 
 		// 標準入力の処理
 		if(FD_ISSET(0, &readOk)) {
@@ -103,9 +109,12 @@ void game_loop() {
 			break_flag = keyUpdate(key);
 		}
 
-		update();
 
-		draw();
+		if(cur_t - pre_t >= FPS) {
+			update();
+			draw();
+			pre_t = clock();
+		}
 
 		if(break_flag == BREAK) break;
 	}
@@ -146,7 +155,7 @@ static void draw() {
 			draw_bullet(&player_bul[i], win);
 		}
 	}
-	usleep(10000);
+
 	wrefresh(win);
 }
 
