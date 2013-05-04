@@ -1,3 +1,9 @@
+# [ASCII Invader]
+# File: Makefile
+# Description: Makefile
+# Author: Hayato OKUMOTO
+# Copyright: (C)Hayato OKUMOTO, Yuta KOBAYASHI. 2013
+
 #MYLIBDIR	= ../mylib
 #MYLIB			= $(MYLIBDIR)/mylib.a
 #CFLAGS		= -I$(MYLIBDIR)

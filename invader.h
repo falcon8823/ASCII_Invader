@@ -1,3 +1,11 @@
+/* [ASCII Invader]
+ * File: invader.h
+ * Description: オブジェクト構造体定義ヘッダー
+ * Author: Yuta KOBAYASHI
+ * Copyright: (C)Hayato OKUMOTO, Yuta KOBAYASHI. 2013
+*/
+
+
 //自機
 typedef struct
 {

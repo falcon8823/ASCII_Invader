@@ -1,3 +1,10 @@
+/* [ASCII Invader]
+ * File: game.c
+ * Description: 制御ロジックコード
+ * Author: Hayato OKUMOTO
+ * Copyright: (C)Hayato OKUMOTO, Yuta KOBAYASHI. 2013
+*/
+
 #include <stdlib.h>
 #include <curses.h>
 #include <signal.h>

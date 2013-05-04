@@ -1,3 +1,10 @@
+/* [ASCII Invader]
+ * File: drawing.c
+ * Description: キャラクター描画コード
+ * Author: Yuta KOBAYASHI
+ * Copyright: (C)Hayato OKUMOTO, Yuta KOBAYASHI. 2013
+*/
+
 #include <stdlib.h>
 #include <curses.h>
 #include "invader.h"

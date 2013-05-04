@@ -1,3 +1,10 @@
+/* [ASCII Invader]
+ * File: drawing.h
+ * Description: キャラクター描画定義ヘッダー
+ * Author: Yuta KOBAYASHI
+ * Copyright: (C)Hayato OKUMOTO, Yuta KOBAYASHI. 2013
+*/
+
 #define PLAYER_Y 27
 #define WALL_Y 23
 #define PLAYER_WIDTH 13
