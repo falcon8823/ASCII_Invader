@@ -25,7 +25,7 @@
 
 #define K_QUIT 'q'
 
-#define BUL_MAX 100
+#define BUL_MAX 1
 #define ENEMY_X_MAX 7
 #define ENEMY_Y_MAX 7
 
@@ -50,7 +50,6 @@ static PLAYER player;
 static WALL wall[4];
 static ENEMY enemy[ENEMY_X_MAX * ENEMY_Y_MAX];
 static BULLET player_bul[BUL_MAX];
-static int player_bul_pos;
 
 // ゲーム初期化関数
 void game_init() {
@@ -67,7 +66,6 @@ void game_init() {
 		player_bul[i].active = FALSE;
 		player_bul[i].velocity = -1;
 	}
-	player_bul_pos = 0;
 
 	// init player
 	player.x = 50;
@@ -191,8 +189,15 @@ static void die() {
 }
 
 static void shot_bullet(int x, int y) {
-	player_bul_pos = (player_bul_pos + 1) % BUL_MAX;
-	player_bul[player_bul_pos].active = TRUE;
-	player_bul[player_bul_pos].x = x;
-	player_bul[player_bul_pos].y = y;
+	int i;
+	
+	// 弾数MAX内で撃つ
+	for(i = 0; i < BUL_MAX; i++) {
+		if(player_bul[i].active == FALSE) {
+			player_bul[i].active = TRUE;
+			player_bul[i].x = x;
+			player_bul[i].y = y;
+			break;
+		}
+	}
 }
