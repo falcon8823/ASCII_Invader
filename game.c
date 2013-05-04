@@ -29,7 +29,7 @@
 #define ENEMY_X_MAX 7
 #define ENEMY_Y_MAX 7
 
-#define FPS (clock_t)(CLOCKS_PER_SEC / 20)
+#define FPS (clock_t)(CLOCKS_PER_SEC / 60)
 
 static void update();
 static void draw();
@@ -141,7 +141,7 @@ static void update() {
 static void draw() {
 	int i;
 
-	wclear(win);
+	werase(win);
 	box(win, '#', '#');
 
 	draw_player(&player, win);
