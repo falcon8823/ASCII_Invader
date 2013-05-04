@@ -28,6 +28,7 @@
 #define BUL_MAX 1
 #define ENEMY_X_MAX 7
 #define ENEMY_Y_MAX 7
+#define ENEMY_NUM (ENEMY_X_MAX * ENEMY_Y_MAX)
 
 #define FPS (clock_t)(CLOCKS_PER_SEC / 60)
 
@@ -36,6 +37,7 @@ static void draw();
 static int keyUpdate(int c);
 static void die();
 static void shot_bullet(int x, int y);
+static void enemy_collision();
 
 
 static int width;
@@ -76,6 +78,7 @@ void game_init() {
 			enemy[j * ENEMY_X_MAX + i].x = i;
 			enemy[j * ENEMY_X_MAX + i].y = j;
 			enemy[j * ENEMY_X_MAX + i].type = j;
+			enemy[j * ENEMY_X_MAX + i].active = TRUE;
 		}
 	}
 	
@@ -132,6 +135,9 @@ static void update() {
 			if(player_bul[i].y <= 0) player_bul[i].active = FALSE;
 		}
 	}
+
+	enemy_collision();
+
 }
 
 // 描画の更新処理関数
@@ -144,8 +150,10 @@ static void draw() {
 
 	draw_player(&player, win);
 	
-	for(i = 0; i < ENEMY_X_MAX * ENEMY_Y_MAX; i++) {
-		draw_enemy(&enemy[i], win);
+	for(i = 0; i < ENEMY_NUM; i++) {
+		if(enemy[i].active == TRUE) {
+			draw_enemy(&enemy[i], win);
+		}
 	}
 	
 	for(i = 0; i < BUL_MAX; i++) {
@@ -201,3 +209,28 @@ static void shot_bullet(int x, int y) {
 		}
 	}
 }
+
+// 敵の当たり判定
+static void enemy_collision() {
+	int i, j;
+	int x, y;
+	BULLET *bul;
+
+	for(i = 0; i < BUL_MAX; i++) {
+		if(player_bul[i].active == TRUE) {
+			bul = &player_bul[i];
+			for(j = 0; j < ENEMY_NUM; j++) {
+				if(enemy[j].active == TRUE) {
+					x = ENEMY_X(enemy[j].x);
+					y = ENEMY_Y(enemy[j].y);
+					if(bul->y == y && bul->x >= x && bul->x < x + ENEMY_WIDTH) {
+						// 当たってる
+						bul->active = FALSE;
+						enemy[j].active = FALSE;
+					}
+				}
+			}
+		}
+	}
+}
+
