@@ -17,7 +17,7 @@ CC = gcc
 CCFLAGS = -Wall
 LD = gcc
 LDFLAGS = 
-LIBS = -lc -lncursesw
+LIBS = -lc -lncurses
 
 $(TARGET): $(OBJS)
 	$(LD) $(OBJS) $(LDFLAGS) -o $(TARGET) $(LIBS)
