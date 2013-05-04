@@ -14,8 +14,8 @@
 #define ENEMY_WIDTH 7
 #define ENEMY_HEIGHT 1
 #define ENEMY_FIELD_X 15
-#define ENEMY_FIELD_Y 10
-#define SPACE_X 2
+#define ENEMY_FIELD_Y 5
+#define SPACE_X 4
 #define SPACE_Y 1
 
 void draw_player(PLAYER *player,WINDOW *win);

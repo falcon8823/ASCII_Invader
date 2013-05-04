@@ -25,8 +25,8 @@
 #define K_QUIT 'q'
 
 #define BUL_MAX 10
-#define ENEMY_X_MAX 5
-#define ENEMY_Y_MAX 4
+#define ENEMY_X_MAX 7
+#define ENEMY_Y_MAX 7
 
 static void update();
 static void draw();
@@ -43,9 +43,9 @@ static struct timeval t_out;
 
 static PLAYER player;
 static WALL wall[4];
-static ENEMY enemy[20];
-static BULLET pl_bul[BUL_MAX];
-static int pl_bul_pos;
+static ENEMY enemy[ENEMY_X_MAX * ENEMY_Y_MAX];
+static BULLET player_bul[BUL_MAX];
+static int player_bul_pos;
 
 // ゲーム初期化関数
 void game_init() {
@@ -55,14 +55,14 @@ void game_init() {
 	FD_ZERO(&mask);
 	FD_SET(0, &mask); // 標準入力の監視	
 	t_out.tv_sec = 0;
-	t_out.tv_usec = 100000; // 100ms
+	t_out.tv_usec = 10;
 		
 	// init bullet
 	for(i = 0; i < BUL_MAX; i++) {
-		pl_bul[i].active = FALSE;
-		pl_bul[i].velocity = -1;
+		player_bul[i].active = FALSE;
+		player_bul[i].velocity = -1;
 	}
-	pl_bul_pos = 0;
+	player_bul_pos = 0;
 
 	// init player
 	player.x = 50;
@@ -81,10 +81,10 @@ void game_init() {
 	initscr();
 	signal(SIGINT, die); // INTシグナル割り込みでdie終了関数を呼び出し
 	win = newwin(WIN_HEIGHT + 2, WIN_WIDTH + 2, 0, 0);
-	box(win, '|', '-');
+	keypad(stdscr, TRUE);
+	curs_set(0); // カーソル非表示
 	cbreak();
 	noecho();
-	keypad(stdscr, TRUE);
 }
 
 // ゲームループ関数
@@ -120,9 +120,9 @@ static void update() {
 	int i;
 
 	for(i = 0; i < BUL_MAX; i++) {
-		if(pl_bul[i].active == TRUE) {
-			pl_bul[i].y += pl_bul[i].velocity;
-			if(pl_bul[i].y <= 0) pl_bul[i].active = FALSE;
+		if(player_bul[i].active == TRUE) {
+			player_bul[i].y += player_bul[i].velocity;
+			if(player_bul[i].y <= 0) player_bul[i].active = FALSE;
 		}
 	}
 }
@@ -133,7 +133,7 @@ static void draw() {
 	int i;
 
 	wclear(win);
-	box(win, '|', '-');
+	box(win, '#', '#');
 
 	draw_player(&player, win);
 	
@@ -142,8 +142,8 @@ static void draw() {
 	}
 	
 	for(i = 0; i < BUL_MAX; i++) {
-		if(pl_bul[i].active == TRUE) {
-			draw_bullet(&pl_bul[i], win);
+		if(player_bul[i].active == TRUE) {
+			draw_bullet(&player_bul[i], win);
 		}
 	}
 	usleep(10000);
@@ -182,8 +182,8 @@ static void die() {
 }
 
 static void shot_bullet(int x, int y) {
-	pl_bul_pos = (pl_bul_pos + 1) % BUL_MAX;
-	pl_bul[pl_bul_pos].active = TRUE;
-	pl_bul[pl_bul_pos].x = x;
-	pl_bul[pl_bul_pos].y = y;
+	player_bul_pos = (player_bul_pos + 1) % BUL_MAX;
+	player_bul[player_bul_pos].active = TRUE;
+	player_bul[player_bul_pos].x = x;
+	player_bul[player_bul_pos].y = y;
 }
