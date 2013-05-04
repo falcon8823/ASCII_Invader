@@ -18,11 +18,11 @@
 #define ENEMY_HEIGHT 1
 #define ENEMY_FIELD_X 15
 #define ENEMY_FIELD_Y 5
-#define ENEMY_X(i) (ENEMY_FIELD_X + i * (ENEMY_WIDTH + SPACE_X))
-#define ENEMY_Y(j) (ENEMY_FIELD_Y + j * (ENEMY_HEIGHT + SPACE_Y))
+#define ENEMY_X_POS(i, FIELD_X) (FIELD_X + i * (ENEMY_WIDTH + SPACE_X))
+#define ENEMY_Y_POS(j, FIELD_Y) (FIELD_Y + j * (ENEMY_HEIGHT + SPACE_Y))
 
 void draw_player(PLAYER *player,WINDOW *win);
 void draw_wall(WALL *wall,WINDOW *win);
-void draw_enemy(ENEMY *enemy,WINDOW *win);
+void draw_enemy(ENEMY *enemy, int fx, int fy, WINDOW *win);
 void draw_bullet(BULLET *bullet,WINDOW *win);
 

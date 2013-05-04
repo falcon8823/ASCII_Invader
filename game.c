@@ -51,6 +51,7 @@ static clock_t cur_t, pre_t;
 static PLAYER player;
 static WALL wall[4];
 static ENEMY enemy[ENEMY_X_MAX * ENEMY_Y_MAX];
+static int enemy_field_x, enemy_field_y;
 static BULLET player_bul[BUL_MAX];
 
 // ゲーム初期化関数
@@ -81,6 +82,8 @@ void game_init() {
 			enemy[j * ENEMY_X_MAX + i].active = TRUE;
 		}
 	}
+	enemy_field_x = ENEMY_FIELD_X;
+	enemy_field_y = ENEMY_FIELD_Y;
 	
 	// 画面作成
 	setlocale(LC_ALL,"");
@@ -152,7 +155,7 @@ static void draw() {
 	
 	for(i = 0; i < ENEMY_NUM; i++) {
 		if(enemy[i].active == TRUE) {
-			draw_enemy(&enemy[i], win);
+			draw_enemy(&enemy[i], enemy_field_x, enemy_field_y, win);
 		}
 	}
 	
@@ -221,8 +224,8 @@ static void enemy_collision() {
 			bul = &player_bul[i];
 			for(j = 0; j < ENEMY_NUM; j++) {
 				if(enemy[j].active == TRUE) {
-					x = ENEMY_X(enemy[j].x);
-					y = ENEMY_Y(enemy[j].y);
+					x = ENEMY_X_POS(enemy[j].x, enemy_field_x);
+					y = ENEMY_Y_POS(enemy[j].y, enemy_field_y);
 					if(bul->y == y && bul->x >= x && bul->x < x + ENEMY_WIDTH) {
 						// 当たってる
 						bul->active = FALSE;

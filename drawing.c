@@ -47,10 +47,10 @@ void draw_wall(WALL *wall, WINDOW *win)
     wprintw(win, "=========");
 }
 
-void draw_enemy(ENEMY *enemy, WINDOW *win)
+void draw_enemy(ENEMY *enemy, int fx, int fy, WINDOW *win)
 {
 
-		wmove(win, ENEMY_Y(enemy->y), ENEMY_X(enemy->x));
+		wmove(win, ENEMY_Y_POS(enemy->y, fy), ENEMY_X_POS(enemy->x, fx));
 		wprintw(win, character[enemy->type]);
 }
 
