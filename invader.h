@@ -21,12 +21,10 @@ typedef struct {
 
 
 //相手
-typedef struct
-{
-    int x;
-    int y;
-		int active;
-    int type;//種類
+typedef struct {
+	POS pos;
+	int active;
+	int type; //種類
 } ENEMY;
 
 

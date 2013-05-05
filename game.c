@@ -82,8 +82,8 @@ void game_init() {
 	// init enemy
 	for(j = 0; j < ENEMY_Y_MAX; j++) {
 		for(i = 0; i < ENEMY_X_MAX; i++) {
-			enemy[j * ENEMY_X_MAX + i].x = i;
-			enemy[j * ENEMY_X_MAX + i].y = j;
+			enemy[j * ENEMY_X_MAX + i].pos.x = i;
+			enemy[j * ENEMY_X_MAX + i].pos.y = j;
 			enemy[j * ENEMY_X_MAX + i].type = j;
 			enemy[j * ENEMY_X_MAX + i].active = TRUE;
 		}
@@ -238,8 +238,8 @@ static void enemy_collision() {
 			bul = &player_bul[i];
 			for(j = 0; j < ENEMY_NUM; j++) {
 				if(enemy[j].active == TRUE) {
-					x = ENEMY_X_POS(enemy[j].x, enemy_field_x);
-					y = ENEMY_Y_POS(enemy[j].y, enemy_field_y);
+					x = ENEMY_X_POS(enemy[j].pos.x, enemy_field_x);
+					y = ENEMY_Y_POS(enemy[j].pos.y, enemy_field_y);
 					if(bul->y == y && bul->x >= x && bul->x < x + ENEMY_WIDTH) {
 						// 当たってる
 						bul->active = FALSE;
