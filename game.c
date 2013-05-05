@@ -21,7 +21,7 @@ static void draw();
 static int keyUpdate(int c);
 static void die();
 static void shot_bullet(PLAYER *pl);
-static void enemy_collision(PLAYER *pl);
+static int enemy_collision(PLAYER *pl);
 
 
 static int width;
@@ -196,7 +196,7 @@ static void shot_bullet(PLAYER *pl) {
 }
 
 // 敵の当たり判定
-static void enemy_collision(PLAYER *pl) {
+static int enemy_collision(PLAYER *pl) {
 	int j;
 	int x, y;
 	BULLET *bul = &pl->bullet;
@@ -210,9 +210,13 @@ static void enemy_collision(PLAYER *pl) {
 					// 当たってる
 					bul->active = FALSE;
 					enemy[j].active = FALSE;
+
+					return j; // 当たった場合は敵の番号を戻す
 				}
 			}
 		}
 	}
+
+	return -1; //当たってない
 }
 
