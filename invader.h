@@ -15,9 +15,8 @@ typedef struct {
 typedef VECT POS;
 
 //自機
-typedef struct
-{
-    int x;
+typedef struct {
+	POS pos;
 } PLAYER;
 
 

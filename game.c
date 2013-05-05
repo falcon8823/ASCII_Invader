@@ -76,7 +76,8 @@ void game_init() {
 	}
 
 	// init player
-	player.x = 50;
+	player.pos.x = PLAYER_POS_X;
+	player.pos.y = PLAYER_POS_Y;
 
 	// init enemy
 	for(j = 0; j < ENEMY_Y_MAX; j++) {
@@ -186,15 +187,15 @@ static int keyUpdate(int c) {
 	switch(c) {
 		case KEY_RIGHT: // 右矢印キー
 			// 自機の位置を右に
-			if(player.x <= WIN_WIDTH - 7) player.x += 1;
+			if(player.pos.x <= WIN_WIDTH - 7) player.pos.x += 1;
 			break;
 		case KEY_LEFT: // 左矢印キー
 			// 自機の位置を左に
-			if(player.x > 7) player.x -= 1;
+			if(player.pos.x > 7) player.pos.x -= 1;
 			break;
 		case KEY_SPACE:
 			// 弾を撃つ
-			shot_bullet(player.x, PLAYER_Y);
+			shot_bullet(player.pos.x, player.pos.y);
 			break;
 		case K_QUIT:
 			return BREAK;

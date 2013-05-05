@@ -36,40 +36,41 @@ static char* character[2][9] = {
 	}
 };
 
-void draw_player(PLAYER *player, WINDOW *win)
-{ 
-    wmove(win, PLAYER_Y, player->x-6);
-    wprintw(win,"  ._/:::\\_.  ");
+void draw_player(PLAYER *player, WINDOW *win) { 
+	int x = player->pos.x, y = player->pos.y;
 
-    wmove(win, PLAYER_Y + 1, player->x - 6);
-    wprintw(win," /|::(O)::|\\ ");
+	wmove(win, y, x - 6);
+	wprintw(win,"  ._/:::\\_.  ");
 
-    wmove(win, PLAYER_Y + 2, player->x - 6);
-    wprintw(win,"/-l-------l-\\");
+	wmove(win, y + 1, x - 6);
+	wprintw(win," /|::(O)::|\\ ");
+
+	wmove(win, y + 2, x - 6);
+	wprintw(win,"/-l-------l-\\");
 }
 
 void draw_wall(WALL *wall, WINDOW *win)
 {
-    wmove(win, WALL_Y, wall->x - 6);
-    wprintw(win,"=========");
-    
-    wmove(win, WALL_Y + 1, wall->x - 6);
-    wprintw(win, "=danger!=");
+	wmove(win, WALL_Y, wall->x - 6);
+	wprintw(win,"=========");
 
-    wmove(win, WALL_Y + 2, wall->x - 6);
-    wprintw(win, "=========");
+	wmove(win, WALL_Y + 1, wall->x - 6);
+	wprintw(win, "=danger!=");
+
+	wmove(win, WALL_Y + 2, wall->x - 6);
+	wprintw(win, "=========");
 }
 
 void draw_enemy(ENEMY *enemy, int fx, int fy, WINDOW *win)
 {
 
-		wmove(win, ENEMY_Y_POS(enemy->y, fy), ENEMY_X_POS(enemy->x, fx));
-		wprintw(win, character[fx % 2][enemy->type]);
+	wmove(win, ENEMY_Y_POS(enemy->y, fy), ENEMY_X_POS(enemy->x, fx));
+	wprintw(win, character[fx % 2][enemy->type]);
 }
 
 void draw_bullet(BULLET *bullet,WINDOW *win)
 {
-    wmove(win, bullet->y, bullet->x);
-    wprintw(win, "^");
+	wmove(win, bullet->y, bullet->x);
+	wprintw(win, "^");
 }
 

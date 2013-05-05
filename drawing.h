@@ -5,7 +5,8 @@
  * Copyright: (C)Hayato OKUMOTO, Yuta KOBAYASHI. 2013
 */
 
-#define PLAYER_Y 27
+#define PLAYER_POS_X 50
+#define PLAYER_POS_Y 27
 #define WALL_Y 23
 #define PLAYER_WIDTH 13
 #define PLAYER_HEIGHT 3
