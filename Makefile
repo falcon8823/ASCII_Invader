@@ -4,9 +4,8 @@
 # Author: Hayato OKUMOTO
 # Copyright: (C)Hayato OKUMOTO, Yuta KOBAYASHI. 2013
 
-#MYLIBDIR	= ../mylib
-#MYLIB			= $(MYLIBDIR)/mylib.a
-#CFLAGS		= -I$(MYLIBDIR)
+MYLIBDIR	= ./mylib
+MYLIB			= $(MYLIBDIR)/mylib.a
 TARGET = invader
 SRCS = invader.c game.c drawing.c
 OBJS = ${SRCS:.c=.o}
@@ -14,10 +13,10 @@ OBJS = ${SRCS:.c=.o}
 HEADERS = game.h invader.h drawing.h
 
 CC = gcc
-CCFLAGS = -Wall
+CCFLAGS = -Wall -I$(MYLIBDIR)
 LD = gcc
 LDFLAGS = 
-LIBS = -lc -lncurses
+LIBS = -lc -lncurses $(MYLIB)
 
 $(TARGET): $(OBJS)
 	$(LD) $(OBJS) $(LDFLAGS) -o $(TARGET) $(LIBS)

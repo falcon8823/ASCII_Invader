@@ -1,5 +1,6 @@
 invader
 *.o
+*.a
 \#*
 \#~
 *.swp
