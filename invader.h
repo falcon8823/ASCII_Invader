@@ -5,6 +5,14 @@
  * Copyright: (C)Hayato OKUMOTO, Yuta KOBAYASHI. 2013
 */
 
+#include <stdlib.h>
+#include <curses.h>
+#include <signal.h>
+#include <locale.h>
+#include <sys/time.h>
+#include <unistd.h>
+#include <time.h>
+
 // ウィンドウ
 #define WIN_WIDTH  100
 #define WIN_HEIGHT 30

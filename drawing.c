@@ -5,8 +5,6 @@
  * Copyright: (C)Hayato OKUMOTO, Yuta KOBAYASHI. 2013
 */
 
-#include <stdlib.h>
-#include <curses.h>
 #include "invader.h"
 #include "drawing.h"
 
