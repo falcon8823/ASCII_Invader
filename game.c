@@ -35,7 +35,7 @@ static clock_t cur_t, pre_t;
 static PLAYER player;
 //static WALL wall[4];
 static ENEMY enemy[ENEMY_X_MAX * ENEMY_Y_MAX];
-static int enemy_field_x, enemy_field_y;
+static POS enemy_pos;
 static int enemy_vel;
 static int enemy_move_count;
 
@@ -66,8 +66,9 @@ void game_init() {
 			enemy[j * ENEMY_X_MAX + i].active = TRUE;
 		}
 	}
-	enemy_field_x = ENEMY_FIELD_X;
-	enemy_field_y = ENEMY_FIELD_Y;
+
+	enemy_pos = (POS){ .x = ENEMY_FIELD_X, .y = ENEMY_FIELD_Y };
+
 	enemy_vel = D_LEFT;
 	enemy_move_count = 0;
 	
@@ -126,8 +127,8 @@ static void update() {
 	enemy_collision(&player);
 	
 	if(enemy_move_count >= ENEMY_MOVE_RATE) {
-		enemy_field_x += enemy_vel;
-		if(enemy_field_x <= 5 || enemy_field_x + (ENEMY_WIDTH + SPACE_X) * ENEMY_X_MAX >= WIN_WIDTH) enemy_vel *= -1;
+		enemy_pos.x += enemy_vel;
+		if(enemy_pos.x <= 5 || enemy_pos.x + (ENEMY_WIDTH + SPACE_X) * ENEMY_X_MAX >= WIN_WIDTH) enemy_vel *= -1;
 		enemy_move_count = 0;
 	}
 	enemy_move_count++;
@@ -145,7 +146,7 @@ static void draw() {
 	
 	for(i = 0; i < ENEMY_NUM; i++) {
 		if(enemy[i].active == TRUE) {
-			draw_enemy(&enemy[i], enemy_field_x, enemy_field_y, win);
+			draw_enemy(&enemy[i], &enemy_pos, win);
 		}
 	}
 	
@@ -204,8 +205,8 @@ static int enemy_collision(PLAYER *pl) {
 	if(bul->active == TRUE) {
 		for(j = 0; j < ENEMY_NUM; j++) {
 			if(enemy[j].active == TRUE) {
-				x = ENEMY_X_POS(enemy[j].pos.x, enemy_field_x);
-				y = ENEMY_Y_POS(enemy[j].pos.y, enemy_field_y);
+				x = ENEMY_X_POS(enemy[j].pos.x, enemy_pos.x);
+				y = ENEMY_Y_POS(enemy[j].pos.y, enemy_pos.y);
 				if(bul->pos.y == y && bul->pos.x >= x && bul->pos.x < x + ENEMY_WIDTH) {
 					// 当たってる
 					bul->active = FALSE;

@@ -60,9 +60,9 @@ void draw_wall(WALL *wall, WINDOW *win) {
 	wprintw(win, "=========");
 }
 
-void draw_enemy(ENEMY *enemy, int fx, int fy, WINDOW *win) {
-	wmove(win, ENEMY_Y_POS(enemy->pos.y, fy), ENEMY_X_POS(enemy->pos.x, fx));
-	wprintw(win, character[fx % 2][enemy->type]);
+void draw_enemy(ENEMY *enemy, POS *enemy_pos, WINDOW *win) {
+	wmove(win, ENEMY_Y_POS(enemy->pos.y, enemy_pos->y), ENEMY_X_POS(enemy->pos.x, enemy_pos->x));
+	wprintw(win, character[enemy_pos->x % 2][enemy->type]);
 }
 
 void draw_bullet(BULLET *bullet,WINDOW *win) {

@@ -24,6 +24,6 @@
 
 void draw_player(PLAYER *player,WINDOW *win);
 void draw_wall(WALL *wall,WINDOW *win);
-void draw_enemy(ENEMY *enemy, int fx, int fy, WINDOW *win);
+void draw_enemy(ENEMY *enemy, POS *enemy_pos, WINDOW *win);
 void draw_bullet(BULLET *bullet,WINDOW *win);
 
