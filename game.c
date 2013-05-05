@@ -15,25 +15,6 @@
 #include "invader.h"
 #include "drawing.h"
 
-// ウィンドウ
-#define WIN_WIDTH  100
-#define WIN_HEIGHT 30
-
-#define BREAK 1
-#define NON_BREAK 0
-#define KEY_SPACE ' '
-
-#define K_QUIT 'q'
-
-#define BUL_MAX 1
-#define ENEMY_X_MAX 7
-#define ENEMY_Y_MAX 7
-#define ENEMY_NUM (ENEMY_X_MAX * ENEMY_Y_MAX)
-#define ENEMY_MOVE_RATE 10
-#define D_LEFT -1
-#define D_RIGHT 1
-
-#define FPS (clock_t)(CLOCKS_PER_SEC / 60)
 
 static void update();
 static void draw();
