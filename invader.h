@@ -29,28 +29,26 @@ typedef struct {
 
 
 //弾
-typedef struct
-{
-    int active;
-    int x;
-    int y;
-    int velocity;//速度
-    int sorce;//現在の親
+typedef struct {
+	POS pos;
+	int active;
+	int velocity;//速度
+	int sorce;//現在の親
 } BULLET;
 
 
 //UFO
 typedef struct
 {
-    int x;
-    int endure;
-    int life;
+	int x;
+	int endure;
+	int life;
 } UFO;
 
 
 //ガード（トーチカ）
 typedef struct
 {
-    int x;
+	int x;
 } WALL;
 

@@ -39,7 +39,7 @@ static void update();
 static void draw();
 static int keyUpdate(int c);
 static void die();
-static void shot_bullet(int x, int y);
+static void shot_bullet(POS pos);
 static void enemy_collision();
 
 
@@ -142,8 +142,8 @@ static void update() {
 
 	for(i = 0; i < BUL_MAX; i++) {
 		if(player_bul[i].active == TRUE) {
-			player_bul[i].y += player_bul[i].velocity;
-			if(player_bul[i].y <= 0) player_bul[i].active = FALSE;
+			player_bul[i].pos.y += player_bul[i].velocity;
+			if(player_bul[i].pos.y <= 0) player_bul[i].active = FALSE;
 		}
 	}
 
@@ -195,7 +195,7 @@ static int keyUpdate(int c) {
 			break;
 		case KEY_SPACE:
 			// 弾を撃つ
-			shot_bullet(player.pos.x, player.pos.y);
+			shot_bullet(player.pos);
 			break;
 		case K_QUIT:
 			return BREAK;
@@ -213,15 +213,14 @@ static void die() {
 	exit(0);
 }
 
-static void shot_bullet(int x, int y) {
+static void shot_bullet(POS pos) {
 	int i;
 	
 	// 弾数MAX内で撃つ
 	for(i = 0; i < BUL_MAX; i++) {
 		if(player_bul[i].active == FALSE) {
 			player_bul[i].active = TRUE;
-			player_bul[i].x = x;
-			player_bul[i].y = y;
+			player_bul[i].pos = pos;
 			break;
 		}
 	}
@@ -240,7 +239,7 @@ static void enemy_collision() {
 				if(enemy[j].active == TRUE) {
 					x = ENEMY_X_POS(enemy[j].pos.x, enemy_field_x);
 					y = ENEMY_Y_POS(enemy[j].pos.y, enemy_field_y);
-					if(bul->y == y && bul->x >= x && bul->x < x + ENEMY_WIDTH) {
+					if(bul->pos.y == y && bul->pos.x >= x && bul->pos.x < x + ENEMY_WIDTH) {
 						// 当たってる
 						bul->active = FALSE;
 						enemy[j].active = FALSE;

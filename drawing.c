@@ -66,9 +66,8 @@ void draw_enemy(ENEMY *enemy, int fx, int fy, WINDOW *win) {
 	wprintw(win, character[fx % 2][enemy->type]);
 }
 
-void draw_bullet(BULLET *bullet,WINDOW *win)
-{
-	wmove(win, bullet->y, bullet->x);
+void draw_bullet(BULLET *bullet,WINDOW *win) {
+	wmove(win, bullet->pos.y, bullet->pos.x);
 	wprintw(win, "^");
 }
 
