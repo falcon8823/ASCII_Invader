@@ -49,6 +49,6 @@ typedef struct
 //ガード（トーチカ）
 typedef struct
 {
-	int x;
+	POS pos;
 } WALL;
 

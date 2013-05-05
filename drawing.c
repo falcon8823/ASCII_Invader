@@ -49,15 +49,14 @@ void draw_player(PLAYER *player, WINDOW *win) {
 	wprintw(win,"/-l-------l-\\");
 }
 
-void draw_wall(WALL *wall, WINDOW *win)
-{
-	wmove(win, WALL_Y, wall->x - 6);
+void draw_wall(WALL *wall, WINDOW *win) {
+	wmove(win, wall->pos.y, wall->pos.x - 6);
 	wprintw(win,"=========");
 
-	wmove(win, WALL_Y + 1, wall->x - 6);
+	wmove(win, wall->pos.y + 1, wall->pos.x - 6);
 	wprintw(win, "=danger!=");
 
-	wmove(win, WALL_Y + 2, wall->x - 6);
+	wmove(win, wall->pos.y + 2, wall->pos.x - 6);
 	wprintw(win, "=========");
 }
 

@@ -52,7 +52,7 @@ static struct timeval t_out;
 static clock_t cur_t, pre_t;
 
 static PLAYER player;
-static WALL wall[4];
+//static WALL wall[4];
 static ENEMY enemy[ENEMY_X_MAX * ENEMY_Y_MAX];
 static int enemy_field_x, enemy_field_y;
 static BULLET player_bul[BUL_MAX];
