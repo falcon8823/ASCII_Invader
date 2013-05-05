@@ -5,6 +5,14 @@
  * Copyright: (C)Hayato OKUMOTO, Yuta KOBAYASHI. 2013
 */
 
+// 2次のベクトル構造体 VECT
+typedef struct {
+	int x;
+	int y;
+} VECT;
+
+// 座標型POS
+typedef VECT POS;
 
 //自機
 typedef struct
@@ -49,7 +57,3 @@ typedef struct
     int x;
 } WALL;
 
-
-    
-    
-    
