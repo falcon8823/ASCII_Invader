@@ -18,7 +18,6 @@
 #define K_QUIT 'q'
 
 // ゲーム要素定数
-#define BUL_MAX 1
 #define ENEMY_X_MAX 7
 #define ENEMY_Y_MAX 7
 #define ENEMY_NUM (ENEMY_X_MAX * ENEMY_Y_MAX)
