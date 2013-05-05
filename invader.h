@@ -5,6 +5,17 @@
  * Copyright: (C)Hayato OKUMOTO, Yuta KOBAYASHI. 2013
 */
 
+#include <stdlib.h>
+#include <curses.h>
+#include <signal.h>
+#include <locale.h>
+#include <sys/time.h>
+#include <unistd.h>
+#include <time.h>
+#include "mylib.h"
+
+#define PORT (in_port_t)50000
+#define HOSTNAME_LENGTH 64
 
 //自機
 typedef struct

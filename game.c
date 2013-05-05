@@ -5,15 +5,10 @@
  * Copyright: (C)Hayato OKUMOTO, Yuta KOBAYASHI. 2013
 */
 
-#include <stdlib.h>
-#include <curses.h>
-#include <signal.h>
-#include <locale.h>
-#include <sys/time.h>
-#include <unistd.h>
-#include <time.h>
 #include "invader.h"
 #include "drawing.h"
+
+#define BUF_LEN 20
 
 // ウィンドウ
 #define WIN_WIDTH  100
@@ -42,6 +37,9 @@ static void die();
 static void shot_bullet(int x, int y);
 static void enemy_collision();
 
+static int session_soc;
+static char buf[BUF_LEN];
+static int is_server;
 
 static int width;
 static fd_set mask; // ファイルディスクリプタのマスク
@@ -60,12 +58,16 @@ static int enemy_vel;
 static int enemy_move_count;
 
 // ゲーム初期化関数
-void game_init() {
+void game_init(int soc, int is_srv) {
 	int i, j;
+
+	is_server = is_srv;
+	session_soc = soc;
 	// ファイルディスクリプタの設定
-	width = 1;
+	width = soc + 1;
 	FD_ZERO(&mask);
 	FD_SET(0, &mask); // 標準入力の監視	
+	FD_SET(session_soc, &mask); // ソケットの監視	
 	t_out.tv_sec = 0;
 	t_out.tv_usec = 1;
 		
@@ -118,6 +120,12 @@ void game_loop() {
 		if(FD_ISSET(0, &readOk)) {
 			key = getch();
 			break_flag = keyUpdate(key);
+		}
+
+		// ソケット入力の処理
+		if(FD_ISSET(session_soc, &readOk)) {
+			read(session_soc, buf, BUF_LEN);
+			//break_flag = interpret();
 		}
 
 
