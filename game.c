@@ -10,32 +10,12 @@
 
 #define BUF_LEN 20
 
-// ウィンドウ
-#define WIN_WIDTH  100
-#define WIN_HEIGHT 30
-
-#define BREAK 1
-#define NON_BREAK 0
-#define KEY_SPACE ' '
-
-#define K_QUIT 'q'
-
-#define BUL_MAX 1
-#define ENEMY_X_MAX 7
-#define ENEMY_Y_MAX 7
-#define ENEMY_NUM (ENEMY_X_MAX * ENEMY_Y_MAX)
-#define ENEMY_MOVE_RATE 10
-#define D_LEFT -1
-#define D_RIGHT 1
-
-#define FPS (clock_t)(CLOCKS_PER_SEC / 60)
-
 static void update();
 static void draw();
 static int keyUpdate(int c);
 static void die();
-static void shot_bullet(int x, int y);
-static void enemy_collision();
+static void shot_bullet(PLAYER *pl);
+static int enemy_collision(PLAYER *pl);
 
 static int session_soc;
 static char buf[BUF_LEN];
@@ -50,10 +30,9 @@ static struct timeval t_out;
 static clock_t cur_t, pre_t;
 
 static PLAYER player;
-static WALL wall[4];
+//static WALL wall[4];
 static ENEMY enemy[ENEMY_X_MAX * ENEMY_Y_MAX];
-static int enemy_field_x, enemy_field_y;
-static BULLET player_bul[BUL_MAX];
+static POS enemy_pos;
 static int enemy_vel;
 static int enemy_move_count;
 
@@ -72,25 +51,25 @@ void game_init(int soc, int is_srv) {
 	t_out.tv_usec = 1;
 		
 	// init bullet
-	for(i = 0; i < BUL_MAX; i++) {
-		player_bul[i].active = FALSE;
-		player_bul[i].velocity = -1;
-	}
+	player.bullet.active = FALSE;
+	player.bullet.velocity = -1;
 
 	// init player
-	player.x = 50;
+	player.pos.x = PLAYER_POS_X;
+	player.pos.y = PLAYER_POS_Y;
 
 	// init enemy
 	for(j = 0; j < ENEMY_Y_MAX; j++) {
 		for(i = 0; i < ENEMY_X_MAX; i++) {
-			enemy[j * ENEMY_X_MAX + i].x = i;
-			enemy[j * ENEMY_X_MAX + i].y = j;
+			enemy[j * ENEMY_X_MAX + i].pos.x = i;
+			enemy[j * ENEMY_X_MAX + i].pos.y = j;
 			enemy[j * ENEMY_X_MAX + i].type = j;
 			enemy[j * ENEMY_X_MAX + i].active = TRUE;
 		}
 	}
-	enemy_field_x = ENEMY_FIELD_X;
-	enemy_field_y = ENEMY_FIELD_Y;
+
+	enemy_pos = (POS){ .x = ENEMY_FIELD_X, .y = ENEMY_FIELD_Y };
+
 	enemy_vel = D_LEFT;
 	enemy_move_count = 0;
 	
@@ -145,20 +124,18 @@ void game_loop() {
 // ロジックの更新処理関数
 // （画面に現れない物）
 static void update() {
-	int i;
+	BULLET *p_bul = &player.bullet;
 
-	for(i = 0; i < BUL_MAX; i++) {
-		if(player_bul[i].active == TRUE) {
-			player_bul[i].y += player_bul[i].velocity;
-			if(player_bul[i].y <= 0) player_bul[i].active = FALSE;
-		}
+	if(p_bul->active == TRUE) {
+		p_bul->pos.y += p_bul->velocity;
+		if(p_bul->pos.y <= 0) p_bul->active = FALSE;
 	}
 
-	enemy_collision();
+	enemy_collision(&player);
 	
 	if(enemy_move_count >= ENEMY_MOVE_RATE) {
-		enemy_field_x += enemy_vel;
-		if(enemy_field_x <= 5 || enemy_field_x + (ENEMY_WIDTH + SPACE_X) * ENEMY_X_MAX >= WIN_WIDTH) enemy_vel *= -1;
+		enemy_pos.x += enemy_vel;
+		if(enemy_pos.x <= 5 || enemy_pos.x + (ENEMY_WIDTH + SPACE_X) * ENEMY_X_MAX >= WIN_WIDTH) enemy_vel *= -1;
 		enemy_move_count = 0;
 	}
 	enemy_move_count++;
@@ -176,14 +153,12 @@ static void draw() {
 	
 	for(i = 0; i < ENEMY_NUM; i++) {
 		if(enemy[i].active == TRUE) {
-			draw_enemy(&enemy[i], enemy_field_x, enemy_field_y, win);
+			draw_enemy(&enemy[i], &enemy_pos, win);
 		}
 	}
 	
-	for(i = 0; i < BUL_MAX; i++) {
-		if(player_bul[i].active == TRUE) {
-			draw_bullet(&player_bul[i], win);
-		}
+	if(player.bullet.active == TRUE) {
+		draw_bullet(&player.bullet, win);
 	}
 
 	wrefresh(win);
@@ -194,15 +169,15 @@ static int keyUpdate(int c) {
 	switch(c) {
 		case KEY_RIGHT: // 右矢印キー
 			// 自機の位置を右に
-			if(player.x <= WIN_WIDTH - 7) player.x += 1;
+			if(player.pos.x <= WIN_WIDTH - 7) player.pos.x += 1;
 			break;
 		case KEY_LEFT: // 左矢印キー
 			// 自機の位置を左に
-			if(player.x > 7) player.x -= 1;
+			if(player.pos.x > 7) player.pos.x -= 1;
 			break;
 		case KEY_SPACE:
 			// 弾を撃つ
-			shot_bullet(player.x, PLAYER_Y);
+			shot_bullet(&player);
 			break;
 		case K_QUIT:
 			return BREAK;
@@ -220,41 +195,36 @@ static void die() {
 	exit(0);
 }
 
-static void shot_bullet(int x, int y) {
-	int i;
-	
+static void shot_bullet(PLAYER *pl) {
 	// 弾数MAX内で撃つ
-	for(i = 0; i < BUL_MAX; i++) {
-		if(player_bul[i].active == FALSE) {
-			player_bul[i].active = TRUE;
-			player_bul[i].x = x;
-			player_bul[i].y = y;
-			break;
-		}
+	if(pl->bullet.active == FALSE) {
+		pl->bullet.active = TRUE;
+		pl->bullet.pos = pl->pos;
 	}
 }
 
 // 敵の当たり判定
-static void enemy_collision() {
-	int i, j;
+static int enemy_collision(PLAYER *pl) {
+	int j;
 	int x, y;
-	BULLET *bul;
+	BULLET *bul = &pl->bullet;
 
-	for(i = 0; i < BUL_MAX; i++) {
-		if(player_bul[i].active == TRUE) {
-			bul = &player_bul[i];
-			for(j = 0; j < ENEMY_NUM; j++) {
-				if(enemy[j].active == TRUE) {
-					x = ENEMY_X_POS(enemy[j].x, enemy_field_x);
-					y = ENEMY_Y_POS(enemy[j].y, enemy_field_y);
-					if(bul->y == y && bul->x >= x && bul->x < x + ENEMY_WIDTH) {
-						// 当たってる
-						bul->active = FALSE;
-						enemy[j].active = FALSE;
-					}
+	if(bul->active == TRUE) {
+		for(j = 0; j < ENEMY_NUM; j++) {
+			if(enemy[j].active == TRUE) {
+				x = ENEMY_X_POS(enemy[j].pos.x, enemy_pos.x);
+				y = ENEMY_Y_POS(enemy[j].pos.y, enemy_pos.y);
+				if(bul->pos.y == y && bul->pos.x >= x && bul->pos.x < x + ENEMY_WIDTH) {
+					// 当たってる
+					bul->active = FALSE;
+					enemy[j].active = FALSE;
+
+					return j; // 当たった場合は敵の番号を戻す
 				}
 			}
 		}
 	}
+
+	return -1; //当たってない
 }
 
