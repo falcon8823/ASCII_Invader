@@ -11,3 +11,7 @@ CUIで動作するネットワーク対戦型インベーダー
 ## Copyright
 
 &copy; Hayato OKUMOTO, Yuta KOBAYASHI. 2013
+
+## License
+
+MIT License
