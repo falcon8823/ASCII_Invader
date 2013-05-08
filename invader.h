@@ -5,6 +5,7 @@
  * Copyright: (C)Hayato OKUMOTO, Yuta KOBAYASHI. 2013
 */
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <curses.h>
 #include <signal.h>
@@ -12,7 +13,8 @@
 #include <sys/time.h>
 #include <unistd.h>
 #include <time.h>
-#include "mylib.h"
+#include "network.h"
+#include "game.h"
 
 #define PORT (in_port_t)50000
 #define HOSTNAME_LENGTH 64

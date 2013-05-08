@@ -5,10 +5,7 @@
  * Copyright: (C)Hayato OKUMOTO, Yuta KOBAYASHI. 2013
  */
 
-#include <stdio.h>
 #include "invader.h"
-#include "game.h"
-
 
 int main(int argc, char **argv) {
 	int soc;
@@ -21,7 +18,7 @@ int main(int argc, char **argv) {
 
 	if(yn == 'y') {
 		// server
-		if((soc = setup_server(PORT)) == -1) {
+		if((soc = init_server(PORT)) == -1) {
 			exit(1);
 		}
 		is_server = TRUE;
@@ -29,9 +26,9 @@ int main(int argc, char **argv) {
 		// client
 		printf("input server's hostname: ");
 		fgets(hostname, HOSTNAME_LENGTH, stdin);
-		chop_newline(hostname, HOSTNAME_LENGTH);
+		nl_to_null(hostname, HOSTNAME_LENGTH);
 
-		if((soc = setup_client(hostname, PORT)) == -1) {
+		if((soc = init_client(hostname, PORT)) == -1) {
 			exit(1);
 		}
 		is_server = FALSE;

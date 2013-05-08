@@ -4,19 +4,17 @@
 # Author: Hayato OKUMOTO
 # Copyright: (C)Hayato OKUMOTO, Yuta KOBAYASHI. 2013
 
-MYLIBDIR	= ./mylib
-MYLIB			= $(MYLIBDIR)/mylib.a
 TARGET = invader
-SRCS = invader.c game.c drawing.c
+SRCS = invader.c game.c drawing.c network.c
 OBJS = ${SRCS:.c=.o}
 
-HEADERS = game.h invader.h drawing.h
+HEADERS = game.h invader.h drawing.h network.h
 
 CC = gcc
-CCFLAGS = -Wall -I$(MYLIBDIR)
+CCFLAGS = -Wall
 LD = gcc
 LDFLAGS = 
-LIBS = -lc -lncurses $(MYLIB)
+LIBS = -lc -lncurses
 
 $(TARGET): $(OBJS)
 	$(LD) $(OBJS) $(LDFLAGS) -o $(TARGET) $(LIBS)
@@ -25,7 +23,6 @@ $(TARGET): $(OBJS)
 	$(CC) $(CCFLAGS) -c $<
 
 $(OBJS): $(HEADERS) Makefile
-
 
 clean:
 	$(RM) $(TARGET) $(OBJS) *.o *~
