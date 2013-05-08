@@ -1,5 +1,5 @@
 /* [ASCII Invader]
- * File: network.h
+ * File: network.c
  * Description: ネットワーク通信関数ライブラリ
  * Author: Hayato OKUMOTO
  * Copyright: (C)Hayato OKUMOTO, Yuta KOBAYASHI. 2013
