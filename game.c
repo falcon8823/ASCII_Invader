@@ -18,6 +18,8 @@ static void shot_bullet(PLAYER *pl);
 static int enemy_collision(PLAYER *pl);
 static int interpret();
 static void dispose_bullet(BULLET *bul);
+static void dispose_enemy(ENEMY *ene);
+static void ending_win();
 
 static int session_soc;
 static char buf[BUF_LEN];
@@ -39,10 +41,12 @@ static POS enemy_pos;
 static int enemy_vel;
 static int enemy_move_count;
 static int dead_enemy;
+static int alive_enemy;
 
 // ゲーム初期化関数
 void game_init(int soc, int is_srv) {
 	int i, j;
+	ENEMY *ene_tmp;
 
 	is_server = is_srv;
 	session_soc = soc;
@@ -65,10 +69,12 @@ void game_init(int soc, int is_srv) {
 	// init enemy
 	for(j = 0; j < ENEMY_Y_MAX; j++) {
 		for(i = 0; i < ENEMY_X_MAX; i++) {
-			enemy[j * ENEMY_X_MAX + i].pos.x = i;
-			enemy[j * ENEMY_X_MAX + i].pos.y = j;
-			enemy[j * ENEMY_X_MAX + i].type = j;
-			enemy[j * ENEMY_X_MAX + i].active = TRUE;
+			ene_tmp = &enemy[j * ENEMY_X_MAX + i];
+			ene_tmp->pos.x = i;
+			ene_tmp->pos.y = j;
+			ene_tmp->type = j;
+			ene_tmp->active = TRUE;
+			ene_tmp->point = (ENEMY_Y_MAX - j) * 10;
 		}
 	}
 
@@ -77,6 +83,7 @@ void game_init(int soc, int is_srv) {
 	enemy_vel = D_LEFT;
 	enemy_move_count = 0;
 	dead_enemy = -1;
+	alive_enemy = ENEMY_NUM;
 	
 	// 画面作成
 	setlocale(LC_ALL,"");
@@ -119,9 +126,10 @@ void game_loop() {
 			pre_t = clock();
 			
 			// 相手に情報を送信
-			sprintf(buf, "%d %d %d %d %d %d %d",
+			sprintf(buf, "%d %d %d %d %d %d %d %d",
 					player.pos.x,
 					player.pos.y,
+					player.score,
 					player.bullet.pos.x,
 					player.bullet.pos.y,
 					enemy_pos.x,
@@ -131,11 +139,18 @@ void game_loop() {
 			write(session_soc, buf, BUF_LEN);
 		}
 
+		if(alive_enemy <= 0) {
+			break_flag = BREAK;
+		}
+
 		if(break_flag == BREAK) {
 			break;
 		}
 	}
 	
+	// 終了画面
+	ending_win();
+
 	// 終了処理
 	die();
 }
@@ -196,6 +211,8 @@ static void draw() {
 	if(player.bullet.active == TRUE) {
 		draw_bullet(&player.bullet, win);
 	}
+
+	draw_score(&player, &player2, win);
 
 	wrefresh(win);
 }
@@ -258,7 +275,8 @@ static int enemy_collision(PLAYER *pl) {
 				if(bul->pos.y == y && bul->pos.x >= x && bul->pos.x < x + ENEMY_WIDTH) {
 					// 当たってる
 					dispose_bullet(bul);
-					enemy[j].active = FALSE;
+					dispose_enemy(&enemy[j]);
+					pl->score += enemy[j].point;
 
 					return j; // 当たった場合は敵の番号を戻す
 				}
@@ -278,9 +296,10 @@ static int interpret() {
 	if(buf[0] == 'q') return BREAK;
 	
 	// パース
-	sscanf(buf, "%d %d %d %d %d %d %d",
+	sscanf(buf, "%d %d %d %d %d %d %d %d",
 			&player2.pos.x,
 			&player2.pos.y,
+			&player2.score,
 			&player2.bullet.pos.x,
 			&player2.bullet.pos.y,
 			&e_pos.x,
@@ -294,7 +313,7 @@ static int interpret() {
 	
 	// 通信相手側で倒された敵を消す
 	if(dead_enemy != -1) {
-		enemy[dead_enemy].active = FALSE;
+		dispose_enemy(&enemy[dead_enemy]);
 	}
 
 	return NON_BREAK;
@@ -305,4 +324,32 @@ static void dispose_bullet(BULLET *bul) {
 	bul->active = FALSE;
 	bul->pos.x = -1;
 	bul->pos.y = -1;
+}
+
+// 敵の消滅処理
+static void dispose_enemy(ENEMY *ene) {
+	ene->active = FALSE;
+	alive_enemy--;
+}
+
+// 終了画面
+static void ending_win() {
+	int key;
+	fd_set readOk;
+
+	werase(win);
+	box(win, '#', '#');
+	draw_ending(&player, &player2, win);
+	wrefresh(win);
+
+	while(1) {
+		readOk = mask;
+		select(width, (fd_set*)&readOk, NULL, NULL, &t_out);		
+
+		// 標準入力の処理
+		if(FD_ISSET(0, &readOk)) {
+			key = getch();
+			if(key == 'q') break;
+		}
+	}
 }

@@ -66,6 +66,7 @@ typedef struct {
 typedef struct {
 	POS pos;
 	BULLET bullet; // 撃てる弾（1発）
+	int score;
 } PLAYER;
 
 
@@ -74,6 +75,7 @@ typedef struct {
 	POS pos;
 	int active;
 	int type; //種類
+	int point;
 } ENEMY;
 
 

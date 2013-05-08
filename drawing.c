@@ -68,3 +68,54 @@ void draw_bullet(BULLET *bullet,WINDOW *win) {
 	wprintw(win, "^");
 }
 
+
+void draw_score(PLAYER *player1,PLAYER *player2, WINDOW *win) {
+    int pos_y,pos_x;
+    pos_y = 2;
+    pos_x = 2;
+    
+    wmove(win,pos_y , pos_x);
+    wprintw(win, "------------------------------------------------");
+    
+    wmove(win, pos_y + 1, pos_x);
+    wprintw(win, "| YOU score:%5d",player1->score);
+    
+    wmove(win, pos_y + 1, pos_x + 26);
+    wprintw(win, "CHARANGER score:%5d",player2->score);
+
+    wmove(win, pos_y + 1, pos_x + 48);
+    wprintw(win, "|");
+
+    wmove(win, pos_y + 2, pos_x);
+    wprintw(win,"------------------------------------------------");
+}
+
+void draw_ending(PLAYER *player1,PLAYER *player2,WINDOW *win)
+{
+    int pos_y,pos_x;
+    pos_y = 16;
+    pos_x = 51;
+    
+    wmove(win,pos_y - 4 , pos_x - 9);
+    wprintw(win, "You're score:%5d",player1->score);
+
+    wmove(win,pos_y - 2 , pos_x - 12);
+    wprintw(win, "CHARANGER's  score:%5d",player2->score);
+
+    if(player1->score > player2->score){
+        wmove(win,pos_y, pos_x - 5);
+        wprintw(win, "You WIN !!");
+    }
+
+    else if(player1->score == player2->score){
+        wmove(win,pos_y, pos_x - 5);
+        wprintw(win, "DRAW !");
+    }
+
+    else{
+        wmove(win,pos_y, pos_x - 6);
+        wprintw(win, "You LOSS ...");
+    }
+}
+
+
